@@ -6,6 +6,7 @@ import { selectStart, setOff } from "../../redux/reducers/start";
 import createSteps from "../../utils/createSteps";
 import { selectSettings } from "../../redux/reducers/settings";
 import withSign from "../../utils/withSign";
+import { setCompetition } from "../../redux/reducers/competition";
 
 const { Title } = Typography;
 
@@ -38,6 +39,9 @@ export default function MainBoard() {
     () => {
       if (startOn.on) {
         const values = createSteps(settings.steps, settings.range);
+        dispatch(
+          setCompetition({ result: parseInt(values[values.length - 1]) })
+        );
         setValue(values[0]);
         showNumbers(values);
       }
@@ -46,7 +50,6 @@ export default function MainBoard() {
     [startOn, settings]
   );
 
-  console.log("result: ", result);
   return (
     <Space className="mainBoard">
       <Title>{startOn.result ? result : value}</Title>

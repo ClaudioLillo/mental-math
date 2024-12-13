@@ -6,7 +6,7 @@ const createSteps = (steps: number = 5, range: number = 10) => {
   values.push(current);
 
   while (stepsCounter < steps) {
-    const value = Math.floor(Math.random() * 10);
+    const value = Math.floor(Math.random() * range);
     const sign = Math.floor(Math.random() * 2) || -1;
     const diff = value * sign;
     if (current + diff >= 0) {

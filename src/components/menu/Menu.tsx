@@ -1,6 +1,7 @@
 import { Button, Form, Input, Modal, Space } from "antd";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setCompetition } from "../../redux/reducers/competition";
 import { setSettings } from "../../redux/reducers/settings";
 import {
   selectStart,
@@ -15,7 +16,7 @@ const { Item } = Form;
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState({});
+  const [options, setOptions] = useState({ range: 10, interval: 3, steps: 5 });
   const startOn = useSelector(selectStart);
   const [onResult, setOnResult] = useState(false);
   const dispatch = useDispatch();
@@ -24,12 +25,20 @@ export default function Menu() {
   };
   const handleOk = () => {
     dispatch(setSettings(options));
+    dispatch(
+      setCompetition({
+        level:
+          Number(options.range) +
+          Number(20 / options.interval) +
+          Number(options.steps),
+      })
+    );
     setOpen(false);
   };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setOptions({
       ...options,
-      [event.target.name]: parseInt(event.target.value),
+      [event.target.name]: event.target.value,
     });
   };
   const handleStart = () => {
@@ -45,9 +54,14 @@ export default function Menu() {
   return (
     <Space className="menu">
       <Button className="menu-button" onClick={openModal}>
-        Settings
+        Configuración
       </Button>
-      <Modal title="Settings" open={open} onOk={handleOk} onCancel={handleOk}>
+      <Modal
+        title="Configuración"
+        open={open}
+        onOk={handleOk}
+        onCancel={handleOk}
+      >
         <Form>
           <Item label="Cantidad de operaciones">
             <Input type="number" name="steps" onChange={handleChange} />
@@ -55,8 +69,18 @@ export default function Menu() {
           <Item label="Rango">
             <Input type="number" name="range" onChange={handleChange} />
           </Item>
-          <Item label="Intervalo">
+          <Item label="Intervalo (segundos)">
             <Input type="number" name="interval" onChange={handleChange} />
+          </Item>
+          <Item label="Dificultad">
+            <Input
+              type="number"
+              value={
+                Number(options.range) +
+                Number(20 / options.interval) +
+                Number(options.steps)
+              }
+            />
           </Item>
         </Form>
       </Modal>
